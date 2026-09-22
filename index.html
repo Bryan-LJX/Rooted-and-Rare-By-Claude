@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rooted & Rare — Rare Tropical Plants & Terrariums</title>
+<meta name="description" content="Rooted & Rare is a boutique nursery for rare, ethically propagated tropical plants and terrariums. Take our Plant Matchmaker quiz to find your perfect specimen." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          forest: {
+            50: '#f2f6f0', 100: '#e0ebdc', 200: '#c2d7b9', 300: '#9dbd8f',
+            400: '#749d67', 500: '#557f49', 600: '#436339', 700: '#374f30',
+            800: '#243020', 900: '#182219', 950: '#0e140d'
+          },
+          linen: { DEFAULT: '#faf6ee', 50: '#fffdf9', 100: '#f6f0e2', 200: '#ede3cd' },
+          terracotta: {
+            50: '#fdf4ef', 100: '#fbe3d5', 200: '#f4c1a2', 300: '#e89d6f',
+            400: '#db7c48', 500: '#c1602f', 600: '#9e4a25', 700: '#7c3a1f'
+          },
+          gold: { 300: '#e3cd97', 400: '#c9a35d', 500: '#ab8748' }
+        },
+        fontFamily: {
+          serif: ['"Playfair Display"', 'serif'],
+          sans: ['Inter', 'sans-serif']
+        },
+        boxShadow: {
+          soft: '0 10px 40px -12px rgba(24, 34, 25, 0.25)',
+          card: '0 4px 24px -6px rgba(24, 34, 25, 0.12)'
+        }
+      }
+    }
+  }
+</script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { background-color: #faf6ee; }
+
+  ::selection { background-color: #c9a35d; color: #182219; }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #f6f0e2; }
+  ::-webkit-scrollbar-thumb { background: #9dbd8f; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: #749d67; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+  .quiz-panel { opacity: 1; transform: translateX(0); transition: opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1), transform 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
+  .quiz-panel.is-hidden { opacity: 0; }
+  .quiz-panel.is-entering { transform: translateX(28px); }
+  .quiz-panel.is-exiting { transform: translateX(-28px); }
+
+  .match-reveal { opacity: 0; transform: translateY(20px) scale(0.985); transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+  .match-reveal.in-view { opacity: 1; transform: translateY(0) scale(1); }
+
+  .toast-hidden { opacity: 0; transform: translateY(16px) scale(0.96); pointer-events: none; }
+  .toast-shown { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+
+  .modal-backdrop-hidden { opacity: 0; pointer-events: none; }
+  .modal-backdrop-shown { opacity: 1; pointer-events: auto; }
+  .modal-panel-hidden { opacity: 0; transform: translateY(18px) scale(0.97); }
+  .modal-panel-shown { opacity: 1; transform: translateY(0) scale(1); }
+
+  .chat-window-hidden { opacity: 0; transform: translateY(16px) scale(0.96); pointer-events: none; }
+  .chat-window-shown { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+  .chat-bubble { transition: opacity 0.25s ease, transform 0.25s ease; }
+  #chat-messages::-webkit-scrollbar { width: 6px; }
+
+  .option-card { transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease; }
+  .option-card:hover { transform: translateY(-2px); }
+
+  .plant-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+  .plant-card:hover { transform: translateY(-6px); }
+
+  .btn-press:active { transform: scale(0.97); }
+
+  .bg-grain {
+    background-image: radial-gradient(rgba(24,34,25,0.06) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+</style>
+</head>
+<body class="font-sans text-forest-900 antialiased">
+
+<!-- ============ NAV ============ -->
+<nav class="fixed top-0 inset-x-0 z-40 backdrop-blur-md bg-linen/85 border-b border-forest-900/10">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+    <a href="#home" class="flex items-center gap-2 group">
+      <span class="w-8 h-8 rounded-full bg-forest-800 text-linen flex items-center justify-center">
+        <i data-lucide="leaf" class="w-4 h-4"></i>
+      </span>
+      <span class="font-serif text-lg tracking-wide text-forest-900">Rooted <span class="text-terracotta-500">&amp;</span> Rare</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8 text-sm font-medium text-forest-700">
+      <a href="#home" class="hover:text-forest-900 transition-colors">Home</a>
+      <a href="#quiz" class="hover:text-forest-900 transition-colors">Plant Matchmaker</a>
+      <a href="#results" class="hover:text-forest-900 transition-colors">Greenhouse</a>
+    </div>
+    <a href="#quiz" class="btn-press inline-flex items-center gap-1.5 text-sm font-semibold bg-forest-800 hover:bg-forest-700 text-linen px-4 py-2 rounded-full transition-colors shadow-card">
+      Take the Quiz
+      <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+    </a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header id="home" class="relative min-h-[92vh] flex items-end overflow-hidden">
+  <video
+    class="absolute inset-0 w-full h-full object-cover"
+    autoplay muted loop playsinline
+    poster="images/hero-poster.jpg"
+    aria-label="A walkthrough of a lush tropical plant greenhouse, giving a sense of the Rooted &amp; Rare nursery">
+    <source src="images/hero-video.mp4" type="video/mp4">
+  </video>
+  <div class="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-950/55 to-forest-950/25"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-forest-950/70 via-forest-950/10 to-transparent"></div>
+  <div class="absolute inset-0 bg-grain opacity-[0.08]"></div>
+
+  <div class="relative max-w-7xl mx-auto px-5 sm:px-8 pt-40 pb-16 md:pb-20 w-full">
+    <div class="reveal max-w-xl">
+      <span class="inline-flex items-center gap-2 text-xs font-semibold tracking-widest uppercase text-terracotta-200 bg-linen/10 border border-linen/25 backdrop-blur-sm px-3 py-1.5 rounded-full">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+        Ethically propagated &middot; Hand-selected
+      </span>
+      <h1 class="mt-6 font-serif text-4xl sm:text-5xl md:text-[3.4rem] leading-[1.08] text-linen">
+        Rare plants,<br class="hidden sm:block" />
+        <span class="italic text-forest-200">rooted</span> in intention.
+      </h1>
+      <p class="mt-6 text-lg text-linen/85 max-w-md leading-relaxed">
+        A boutique nursery for collectors and quiet obsessives — variegated rarities, sculptural specimens, and jewel-box terrariums, every one ethically propagated and grown by hand.
+      </p>
+      <div class="mt-9 flex flex-col sm:flex-row gap-4">
+        <a href="#quiz" id="hero-cta" class="btn-press group inline-flex items-center justify-center gap-2 bg-terracotta-500 hover:bg-terracotta-400 text-linen font-semibold px-7 py-4 rounded-full shadow-soft transition-colors">
+          Start Plant Matchmaker
+          <i data-lucide="sprout" class="w-4 h-4 group-hover:rotate-12 transition-transform"></i>
+        </a>
+        <a href="#results" class="btn-press inline-flex items-center justify-center gap-2 border border-linen/30 hover:border-linen/60 text-linen font-semibold px-7 py-4 rounded-full transition-colors backdrop-blur-sm">
+          Browse the Greenhouse
+        </a>
+      </div>
+      <div class="mt-10 flex items-center gap-6 text-sm text-linen/80">
+        <div class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4 text-forest-200"></i> Health guarantee</div>
+        <div class="flex items-center gap-1.5"><i data-lucide="package" class="w-4 h-4 text-forest-200"></i> White-glove shipping</div>
+      </div>
+    </div>
+
+    <div class="mt-14 flex flex-wrap items-center justify-between gap-4">
+      <div class="inline-flex items-center gap-2 bg-linen/10 border border-linen/20 backdrop-blur-sm rounded-2xl shadow-card px-4 py-3">
+        <i data-lucide="gem" class="w-4 h-4 text-terracotta-300"></i>
+        <span class="text-xs font-semibold text-linen">120+ rare specimens</span>
+      </div>
+      <p class="text-[10px] text-linen/50">Video: Vincuk Konan / Pexels</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ QUIZ ============ -->
+<section id="quiz" class="relative py-24 md:py-32 bg-forest-900 text-linen overflow-hidden">
+  <div class="absolute inset-0 bg-grain opacity-[0.06]"></div>
+  <div class="relative max-w-3xl mx-auto px-5 sm:px-8">
+    <div class="text-center reveal">
+      <span class="text-xs font-semibold tracking-widest uppercase text-terracotta-300">Plant Matchmaker</span>
+      <h2 class="mt-3 font-serif text-3xl sm:text-4xl">Find your perfect specimen</h2>
+      <p class="mt-3 text-forest-200 max-w-lg mx-auto">Three quick questions. One rare plant that actually fits your life.</p>
+    </div>
+
+    <div class="mt-12 reveal">
+      <!-- progress -->
+      <div class="flex items-center justify-between text-xs font-medium text-forest-300 mb-2">
+        <span id="quiz-step-label">Step 1 of 3</span>
+        <span id="quiz-percent-label">0%</span>
+      </div>
+      <div class="w-full h-1.5 rounded-full bg-forest-700/60 overflow-hidden">
+        <div id="quiz-progress-bar" class="h-full bg-terracotta-400 rounded-full transition-all duration-500 ease-out" style="width:0%"></div>
+      </div>
+
+      <!-- quiz card -->
+      <div class="mt-8 bg-linen text-forest-900 rounded-3xl shadow-soft p-6 sm:p-10 min-h-[420px] flex flex-col">
+        <div id="quiz-content" class="flex-1"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESULTS / GREENHOUSE ============ -->
+<section id="results" class="py-24 md:py-32 bg-linen">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+
+    <!-- Top match -->
+    <div class="text-center reveal">
+      <span class="text-xs font-semibold tracking-widest uppercase text-terracotta-600">Your Virtual Greenhouse</span>
+      <h2 class="mt-3 font-serif text-3xl sm:text-4xl text-forest-900">Your top match</h2>
+    </div>
+
+    <div id="match-container" class="mt-10 max-w-4xl mx-auto"></div>
+
+    <!-- Greenhouse grid -->
+    <div class="mt-28">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 reveal">
+        <div>
+          <span class="text-xs font-semibold tracking-widest uppercase text-terracotta-600">Explore</span>
+          <h3 class="mt-2 font-serif text-2xl sm:text-3xl text-forest-900">The full greenhouse</h3>
+          <p class="mt-2 text-forest-600 max-w-md">Filter by difficulty and light to browse every rare specimen in our current collection.</p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <select id="filter-difficulty" class="text-sm font-medium bg-white border border-forest-900/15 rounded-full px-4 py-2.5 text-forest-800 focus:outline-none focus:ring-2 focus:ring-forest-400 cursor-pointer">
+            <option value="all">All difficulties</option>
+            <option value="Easy">Easy</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+          <select id="filter-light" class="text-sm font-medium bg-white border border-forest-900/15 rounded-full px-4 py-2.5 text-forest-800 focus:outline-none focus:ring-2 focus:ring-forest-400 cursor-pointer">
+            <option value="all">All light levels</option>
+            <option value="direct">Direct Sun</option>
+            <option value="bright-indirect">Bright Indirect</option>
+            <option value="low">Low Light</option>
+          </select>
+          <button id="filter-reset" class="text-sm font-semibold text-forest-700 hover:text-forest-900 border border-forest-900/15 rounded-full px-4 py-2.5 transition-colors">
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <p id="greenhouse-count" class="mt-6 text-sm text-forest-500 reveal"></p>
+
+      <div id="greenhouse-grid" class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="bg-forest-900 text-forest-300 py-14">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+    <div class="flex items-center gap-2">
+      <span class="w-8 h-8 rounded-full bg-linen/10 flex items-center justify-center">
+        <i data-lucide="leaf" class="w-4 h-4 text-linen"></i>
+      </span>
+      <span class="font-serif text-lg text-linen">Rooted &amp; Rare</span>
+    </div>
+    <p class="text-sm text-center">Ethically propagated rarities, grown with intention. &copy; 2026 Rooted &amp; Rare Nursery.</p>
+    <div class="flex items-center gap-4 text-linen">
+      <i data-lucide="instagram" class="w-4 h-4 opacity-80 hover:opacity-100 cursor-pointer transition-opacity"></i>
+      <i data-lucide="mail" class="w-4 h-4 opacity-80 hover:opacity-100 cursor-pointer transition-opacity"></i>
+    </div>
+  </div>
+  <p class="text-center text-[11px] text-forest-500 mt-8 px-5">Plant photography courtesy of Wikimedia Commons contributors, used under their respective open licenses. Hero footage by Vincuk Konan via Pexels.</p>
+</footer>
+
+<!-- ============ MODAL ============ -->
+<div id="modal-backdrop" class="modal-backdrop-hidden fixed inset-0 z-50 bg-forest-950/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300">
+  <div id="modal-panel" class="modal-panel-hidden transition-all duration-300 bg-linen rounded-3xl shadow-soft w-full max-w-2xl max-h-[88vh] overflow-y-auto relative">
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- ============ TOAST ============ -->
+<div id="toast" class="toast-hidden fixed bottom-24 right-6 z-[60] max-w-sm transition-all duration-300">
+  <div class="flex items-start gap-3 bg-forest-900 text-linen rounded-2xl shadow-soft px-5 py-4">
+    <i data-lucide="check-circle-2" class="w-5 h-5 text-terracotta-300 shrink-0 mt-0.5"></i>
+    <p id="toast-message" class="text-sm leading-relaxed"></p>
+  </div>
+</div>
+
+<!-- ============ CHATBOT ============ -->
+<div id="chat-window" class="chat-window-hidden fixed bottom-24 right-6 z-[70] w-[92vw] max-w-sm h-[68vh] max-h-[520px] bg-linen rounded-3xl shadow-soft flex flex-col overflow-hidden origin-bottom-right transition-all duration-300">
+  <div class="flex items-center justify-between gap-3 bg-forest-900 text-linen px-5 py-4 shrink-0">
+    <div class="flex items-center gap-3">
+      <span class="w-9 h-9 rounded-full bg-terracotta-500 flex items-center justify-center shrink-0">
+        <i data-lucide="leaf" class="w-4 h-4"></i>
+      </span>
+      <div>
+        <p class="font-serif text-sm leading-tight">Rooted &amp; Rare</p>
+        <p class="text-[11px] text-forest-300 leading-tight">Ask about plants, care &amp; shipping</p>
+      </div>
+    </div>
+    <button id="chat-close" type="button" class="btn-press w-8 h-8 rounded-full hover:bg-linen/10 flex items-center justify-center" aria-label="Close chat">
+      <i data-lucide="x" class="w-4 h-4"></i>
+    </button>
+  </div>
+
+  <div id="chat-messages" class="flex-1 overflow-y-auto px-4 py-4 space-y-3"></div>
+
+  <div id="chat-quick-replies" class="px-4 pb-3 flex flex-wrap gap-2 shrink-0"></div>
+
+  <form id="chat-form" class="flex items-center gap-2 border-t border-forest-900/10 px-3 py-3 shrink-0">
+    <input id="chat-input" type="text" autocomplete="off" placeholder="Ask a question..." class="flex-1 text-sm bg-forest-50 rounded-full px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-forest-400 text-forest-900 placeholder:text-forest-400" />
+    <button type="submit" class="btn-press w-10 h-10 rounded-full bg-terracotta-500 hover:bg-terracotta-400 text-linen flex items-center justify-center shrink-0" aria-label="Send message">
+      <i data-lucide="send" class="w-4 h-4"></i>
+    </button>
+  </form>
+</div>
+
+<button id="chat-launcher" type="button" class="btn-press fixed bottom-6 right-6 z-[70] w-14 h-14 rounded-full bg-forest-800 hover:bg-forest-700 text-linen shadow-soft flex items-center justify-center transition-colors" aria-label="Open chat">
+  <i data-lucide="message-circle" class="w-6 h-6"></i>
+  <span id="chat-unread-dot" class="hidden absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-terracotta-400 ring-2 ring-linen"></span>
+</button>
+
+<script>
+/* =========================================================
+   DATA
+========================================================= */
+const PLANTS = [
+  {
+    id: 'monstera-albo', name: 'Monstera Albo', latin: "Monstera deliciosa 'Albo-variegata'",
+    light: 'bright-indirect', care: 'daily', aesthetic: 'architectural', rarity: 5,
+    difficulty: 'Advanced', petSafe: false,
+    image: "images/monstera-albo.jpg",
+    water: 'Weekly — let top 2" of soil dry', humidity: '60%+ (High)', price: '$685',
+    blurb: "A showstopping variegated climber prized for marble-white leaf patterns. Every leaf is one of a kind."
+  },
+  {
+    id: 'pink-princess', name: 'Pink Princess Philodendron', latin: "Philodendron erubescens 'Pink Princess'",
+    light: 'bright-indirect', care: 'daily', aesthetic: 'trailing', rarity: 4,
+    difficulty: 'Intermediate', petSafe: false,
+    image: "images/pink-princess.jpg",
+    water: 'Every 7–10 days, evenly moist', humidity: '50–60% (Moderate-High)', price: '$210',
+    blurb: "Deep burgundy foliage splashed with vivid pink variegation on a graceful trailing vine."
+  },
+  {
+    id: 'black-velvet', name: 'Alocasia Black Velvet', latin: 'Alocasia reginula',
+    light: 'low', care: 'daily', aesthetic: 'architectural', rarity: 4,
+    difficulty: 'Advanced', petSafe: false,
+    image: "images/black-velvet.jpg",
+    water: 'Weekly, keep lightly moist', humidity: '60%+ (High)', price: '$95',
+    blurb: "Velvety near-black leaves with striking silver veins — a jewel plant for dim corners."
+  },
+  {
+    id: 'fittonia', name: 'Fittonia Mini', latin: 'Fittonia albivenis',
+    light: 'low', care: 'daily', aesthetic: 'terrarium', rarity: 2,
+    difficulty: 'Intermediate', petSafe: true,
+    image: "images/fittonia.jpg",
+    water: 'Frequent — keep evenly moist', humidity: '70%+ (Very High)', price: '$28',
+    blurb: "Delicate nerve-patterned leaves that thrive in the steady humidity of a closed terrarium."
+  },
+  {
+    id: 'hoya-kerrii', name: 'Hoya Kerrii Variegata', latin: "Hoya kerrii 'Variegata'",
+    light: 'bright-indirect', care: 'biweekly', aesthetic: 'trailing', rarity: 4,
+    difficulty: 'Easy', petSafe: true,
+    image: "images/hoya-kerrii.jpg",
+    water: 'Every 2 weeks, let dry fully', humidity: '40–50% (Moderate)', price: '$145',
+    blurb: "Thick, waxy heart-shaped leaves edged in cream — a forgiving vine for the low-fuss collector."
+  },
+  {
+    id: 'string-of-pearls', name: 'String of Pearls', latin: 'Senecio rowleyanus',
+    light: 'direct', care: 'biweekly', aesthetic: 'trailing', rarity: 3,
+    difficulty: 'Easy', petSafe: false,
+    image: "images/string-of-pearls.jpg",
+    water: 'Every 2 weeks, drought tolerant', humidity: '30–40% (Low)', price: '$58',
+    blurb: "Cascading beads of jade catch the light like strands of jewelry — sunny-windowsill drama."
+  },
+  {
+    id: 'zz-raven', name: 'ZZ Raven', latin: "Zamioculcas zamiifolia 'Raven'",
+    light: 'low', care: 'biweekly', aesthetic: 'architectural', rarity: 3,
+    difficulty: 'Easy', petSafe: false,
+    image: "images/zz-raven.jpg",
+    water: 'Every 2–3 weeks, drought tolerant', humidity: '30–40% (Low)', price: '$78',
+    blurb: "Glossy near-black foliage emerging lime green — sculptural, dramatic, nearly indestructible."
+  },
+  {
+    id: 'string-of-turtles', name: 'String of Turtles', latin: 'Peperomia prostrata',
+    light: 'bright-indirect', care: 'biweekly', aesthetic: 'terrarium', rarity: 4,
+    difficulty: 'Easy', petSafe: false,
+    image: "images/string-of-turtles.jpg",
+    water: 'Every 2 weeks, let dry fully', humidity: '40–50% (Moderate)', price: '$65',
+    blurb: "Tiny turtle-shell leaves on threadlike vines — an irresistible miniature for compact spaces."
+  },
+  {
+    id: 'tillandsia', name: 'Tillandsia Xerographica', latin: 'Tillandsia xerographica',
+    light: 'direct', care: 'biweekly', aesthetic: 'terrarium', rarity: 3,
+    difficulty: 'Easy', petSafe: true,
+    image: "images/tillandsia.jpg",
+    water: 'Mist every 2 weeks', humidity: '30–40% (Low)', price: '$95',
+    blurb: "The 'king of air plants' — a silvery, sculptural rosette that needs no soil at all."
+  },
+  {
+    id: 'ficus-tineke', name: 'Ficus Tineke', latin: "Ficus elastica 'Tineke'",
+    light: 'direct', care: 'daily', aesthetic: 'architectural', rarity: 3,
+    difficulty: 'Intermediate', petSafe: false,
+    image: "images/ficus-tineke.jpg",
+    water: 'Weekly, let top soil dry', humidity: '40–50% (Moderate)', price: '$120',
+    blurb: "Glossy variegated leaves in cream, green, and blush pink on a bold upright statement tree."
+  }
+];
+
+const LIGHT_LABEL = { 'direct': 'Direct Sun', 'bright-indirect': 'Bright Indirect', 'low': 'Low Light' };
+const LIGHT_PHRASE = { 'direct': 'direct, blazing sunlight', 'bright-indirect': 'bright, indirect light', 'low': 'low-light spaces' };
+const CARE_PHRASE = { 'daily': 'daily rituals of attention', 'biweekly': 'a relaxed, low-maintenance rhythm' };
+const AESTHETIC_PHRASE = { 'trailing': 'lush, trailing vines', 'architectural': 'bold, architectural leaves', 'terrarium': 'compact terrarium dwellers' };
+const RARITY_LABEL = { 1: 'Curated', 2: 'Uncommon', 3: 'Rare', 4: 'Very Rare', 5: 'Ultra Rare' };
+const DIFFICULTY_STYLES = {
+  'Easy': 'bg-forest-100 text-forest-700',
+  'Intermediate': 'bg-gold-300/40 text-gold-500',
+  'Advanced': 'bg-terracotta-100 text-terracotta-600'
+};
+
+
+/* =========================================================
+   QUIZ CONFIG
+========================================================= */
+const QUESTIONS = [
+  {
+    key: 'light',
+    title: 'What kind of light does your space offer?',
+    subtitle: 'Be honest — your new plant will thank you.',
+    options: [
+      { value: 'direct', label: 'Direct, Blazing Sunlight', desc: 'A south-facing window with full sun most of the day.', icon: 'sun' },
+      { value: 'bright-indirect', label: 'Bright, Indirect Light', desc: 'Plenty of light, but filtered or a few feet from the window.', icon: 'cloud-sun' },
+      { value: 'low', label: 'A Low-Light Sanctuary', desc: 'North-facing rooms, deep interiors, or mostly lamp light.', icon: 'moon' }
+    ]
+  },
+  {
+    key: 'care',
+    title: 'How involved do you like to be?',
+    subtitle: "There's no wrong answer — just the right plant.",
+    options: [
+      { value: 'daily', label: 'I check on my plants daily', desc: 'I love the ritual — misting, rotating, inspecting new growth.', icon: 'eye' },
+      { value: 'biweekly', label: 'I forget they exist for two weeks', desc: 'Life gets busy. My plants need to be okay with that.', icon: 'briefcase' }
+    ]
+  },
+  {
+    key: 'aesthetic',
+    title: 'What look calls to you?',
+    subtitle: 'Pick the silhouette you keep pinning.',
+    options: [
+      { value: 'trailing', label: 'Lush, Trailing Vines', desc: 'Cascading foliage spilling from shelves and hanging pots.', icon: 'waves' },
+      { value: 'architectural', label: 'Bold, Architectural Leaves', desc: 'Sculptural statement plants that anchor a room.', icon: 'triangle' },
+      { value: 'terrarium', label: 'Compact Terrarium Dwellers', desc: 'Tiny, jewel-like specimens for glass and small spaces.', icon: 'gem' }
+    ]
+  }
+];
+
+/* =========================================================
+   STATE
+========================================================= */
+const state = {
+  step: 0,
+  answers: { light: null, care: null, aesthetic: null },
+  topMatchId: null,
+  filters: { difficulty: 'all', light: 'all' },
+  reserved: new Set(),
+  activeModalId: null,
+  chatOpen: false,
+  chatGreeted: false
+};
+
+/* =========================================================
+   ICON REFRESH HELPER
+========================================================= */
+function refreshIcons() {
+  if (window.lucide) lucide.createIcons();
+}
+
+/* =========================================================
+   QUIZ RENDERING
+========================================================= */
+function renderQuiz(animate) {
+  const content = document.getElementById('quiz-content');
+  const q = QUESTIONS[state.step];
+  const totalSteps = QUESTIONS.length;
+
+  document.getElementById('quiz-step-label').textContent = `Step ${state.step + 1} of ${totalSteps}`;
+  document.getElementById('quiz-percent-label').textContent = `${Math.round((state.step / totalSteps) * 100)}%`;
+  document.getElementById('quiz-progress-bar').style.width = `${(state.step / totalSteps) * 100}%`;
+
+  const buildInner = () => {
+    const optionsHtml = q.options.map(opt => {
+      const selected = state.answers[q.key] === opt.value;
+      return `
+        <button type="button" data-value="${opt.value}" class="option-card btn-press text-left w-full flex items-start gap-4 rounded-2xl border-2 px-5 py-4 ${selected ? 'border-forest-700 bg-forest-50 shadow-card' : 'border-forest-900/10 bg-white hover:border-forest-400'}">
+          <span class="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center ${selected ? 'bg-forest-700 text-linen' : 'bg-forest-100 text-forest-700'}">
+            <i data-lucide="${opt.icon}" class="w-5 h-5"></i>
+          </span>
+          <span class="flex-1">
+            <span class="block font-semibold text-forest-900">${opt.label}</span>
+            <span class="block text-sm text-forest-600 mt-0.5">${opt.desc}</span>
+          </span>
+          <span class="shrink-0 mt-1 w-5 h-5 rounded-full border-2 ${selected ? 'border-forest-700 bg-forest-700' : 'border-forest-900/20'} flex items-center justify-center">
+            ${selected ? '<i data-lucide="check" class="w-3 h-3 text-linen"></i>' : ''}
+          </span>
+        </button>`;
+    }).join('');
+
+    content.innerHTML = `
+      <div class="quiz-panel${animate ? ' is-hidden is-entering' : ''}">
+        <h3 class="font-serif text-2xl sm:text-[1.7rem] text-forest-900">${q.title}</h3>
+        <p class="text-forest-600 mt-1.5 mb-7">${q.subtitle}</p>
+        <div class="space-y-3">${optionsHtml}</div>
+        <div class="mt-8 flex items-center justify-between">
+          <button id="quiz-back" type="button" class="btn-press text-sm font-semibold text-forest-500 hover:text-forest-800 inline-flex items-center gap-1.5 ${state.step === 0 ? 'invisible' : ''}">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
+          </button>
+          <span class="text-xs text-forest-400">Select an answer to continue</span>
+        </div>
+      </div>`;
+
+    refreshIcons();
+
+    content.querySelectorAll('.option-card').forEach(btn => {
+      btn.addEventListener('click', () => selectAnswer(q.key, btn.getAttribute('data-value')));
+    });
+    const backBtn = document.getElementById('quiz-back');
+    if (backBtn) backBtn.addEventListener('click', goBack);
+
+    if (animate) {
+      const panel = content.querySelector('.quiz-panel');
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          panel.classList.remove('is-hidden', 'is-entering');
+        });
+      });
+    }
+  };
+
+  if (animate && content.firstElementChild) {
+    const current = content.firstElementChild;
+    current.classList.add('is-hidden', 'is-exiting');
+    setTimeout(buildInner, 200);
+  } else {
+    buildInner();
+  }
+}
+
+function selectAnswer(key, value) {
+  state.answers[key] = value;
+  renderQuiz(true);
+  setTimeout(() => {
+    if (state.step < QUESTIONS.length - 1) {
+      state.step += 1;
+      renderQuiz(true);
+    } else {
+      finishQuiz();
+    }
+  }, 260);
+}
+
+function goBack() {
+  if (state.step > 0) {
+    state.step -= 1;
+    renderQuiz(true);
+  }
+}
+
+function resetQuiz() {
+  state.step = 0;
+  state.answers = { light: null, care: null, aesthetic: null };
+  renderQuiz(false);
+  document.getElementById('quiz').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* =========================================================
+   MATCHING LOGIC
+========================================================= */
+function scorePlant(plant) {
+  let score = 0;
+  if (plant.light === state.answers.light) score += 1;
+  if (plant.care === state.answers.care) score += 1;
+  if (plant.aesthetic === state.answers.aesthetic) score += 1;
+  return score;
+}
+
+function finishQuiz() {
+  const ranked = [...PLANTS].sort((a, b) => {
+    const diff = scorePlant(b) - scorePlant(a);
+    if (diff !== 0) return diff;
+    return b.rarity - a.rarity;
+  });
+  state.topMatchId = ranked[0].id;
+
+  document.getElementById('quiz-step-label').textContent = 'Complete';
+  document.getElementById('quiz-percent-label').textContent = '100%';
+  document.getElementById('quiz-progress-bar').style.width = '100%';
+
+  document.getElementById('quiz-content').innerHTML = `
+    <div class="quiz-panel-enter h-full flex flex-col items-center justify-center text-center py-10">
+      <span class="w-16 h-16 rounded-full bg-forest-700 text-linen flex items-center justify-center mb-5">
+        <i data-lucide="sparkles" class="w-7 h-7"></i>
+      </span>
+      <h3 class="font-serif text-2xl text-forest-900">Your greenhouse is ready</h3>
+      <p class="text-forest-600 mt-2 max-w-xs">We've matched you with a specimen suited to your light, lifestyle, and taste.</p>
+      <a href="#results" id="reveal-match-btn" class="btn-press mt-7 inline-flex items-center gap-2 bg-forest-800 hover:bg-forest-700 text-linen font-semibold px-6 py-3.5 rounded-full shadow-soft transition-colors">
+        Reveal My Match <i data-lucide="arrow-down" class="w-4 h-4"></i>
+      </a>
+    </div>`;
+  refreshIcons();
+
+  renderMatch();
+}
+
+/* =========================================================
+   MATCH CARD
+========================================================= */
+function reasonList(plant) {
+  return [
+    `Thrives in ${LIGHT_PHRASE[plant.light]}${plant.light === state.answers.light ? " — exactly what your space offers." : ", a close fit for your room."}`,
+    `Suited to ${CARE_PHRASE[plant.care]}${plant.care === state.answers.care ? ", matching how you like to show up for your plants." : "."}`,
+    `Delivers ${AESTHETIC_PHRASE[plant.aesthetic]}${plant.aesthetic === state.answers.aesthetic ? " — precisely the look you're drawn to." : ", a stylish alternative to what you had in mind."}`
+  ];
+}
+
+function renderMatch() {
+  const container = document.getElementById('match-container');
+  if (!state.topMatchId) {
+    container.innerHTML = `
+      <div class="reveal border-2 border-dashed border-forest-900/15 rounded-3xl px-8 py-16 text-center">
+        <span class="w-14 h-14 mx-auto rounded-full bg-forest-100 text-forest-600 flex items-center justify-center mb-4">
+          <i data-lucide="sprout" class="w-6 h-6"></i>
+        </span>
+        <p class="text-forest-600 max-w-sm mx-auto">Take the Plant Matchmaker quiz above to reveal your perfectly matched specimen.</p>
+        <a href="#quiz" class="btn-press inline-flex items-center gap-1.5 mt-5 text-sm font-semibold text-forest-800 hover:text-forest-900">
+          Start the quiz <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>`;
+    refreshIcons();
+    return;
+  }
+
+  const plant = PLANTS.find(p => p.id === state.topMatchId);
+  const reasons = reasonList(plant);
+
+  container.innerHTML = `
+    <div class="match-reveal grid md:grid-cols-2 gap-0 bg-forest-900 text-linen rounded-3xl overflow-hidden shadow-soft">
+      <div class="relative min-h-[280px]">
+        <img src="${plant.image}" alt="${plant.name}" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+        <div class="absolute inset-0 bg-gradient-to-t from-forest-900/80 via-forest-900/10 to-transparent"></div>
+        <div class="absolute top-5 left-5 inline-flex items-center gap-1.5 bg-terracotta-500 text-linen text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
+          <i data-lucide="star" class="w-3 h-3"></i> Top Match
+        </div>
+      </div>
+      <div class="p-8 sm:p-10">
+        <div class="flex items-center gap-2 text-terracotta-300 text-xs font-semibold uppercase tracking-widest">
+          ${rarityDots(plant.rarity)}<span class="ml-1">${RARITY_LABEL[plant.rarity]}</span>
+        </div>
+        <h3 class="font-serif text-2xl sm:text-3xl mt-3">${plant.name}</h3>
+        <p class="italic text-forest-300 text-sm mt-1">${plant.latin}</p>
+        <p class="text-forest-200 mt-4 leading-relaxed text-sm">${plant.blurb}</p>
+
+        <ul class="mt-6 space-y-2.5">
+          ${reasons.map(r => `
+            <li class="flex items-start gap-2.5 text-sm text-forest-100">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-terracotta-300 shrink-0 mt-0.5"></i>
+              <span>${r}</span>
+            </li>`).join('')}
+        </ul>
+
+        <div class="mt-7 flex flex-wrap items-center gap-3">
+          <span class="font-serif text-xl">${plant.price}</span>
+          <button data-plant-id="${plant.id}" class="inspect-btn btn-press bg-terracotta-500 hover:bg-terracotta-400 text-linen font-semibold px-5 py-2.5 rounded-full text-sm transition-colors">
+            Inspect Specimen
+          </button>
+          <button id="retake-quiz-btn" class="btn-press text-sm font-semibold text-forest-300 hover:text-linen underline underline-offset-4">
+            Retake Quiz
+          </button>
+        </div>
+      </div>
+    </div>`;
+
+  refreshIcons();
+  container.querySelectorAll('.inspect-btn').forEach(b => b.addEventListener('click', () => openModal(b.getAttribute('data-plant-id'))));
+  document.getElementById('retake-quiz-btn').addEventListener('click', resetQuiz);
+
+  const matchEl = container.querySelector('.match-reveal');
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => matchEl.classList.add('in-view'));
+  });
+}
+
+function rarityDots(rarity) {
+  return Array.from({ length: 5 }, (_, i) =>
+    `<span class="w-1.5 h-1.5 rounded-full ${i < rarity ? 'bg-terracotta-300' : 'bg-linen/20'}"></span>`
+  ).join('');
+}
+
+/* =========================================================
+   GREENHOUSE GRID
+========================================================= */
+function renderGreenhouse() {
+  const grid = document.getElementById('greenhouse-grid');
+  const countLabel = document.getElementById('greenhouse-count');
+
+  const filtered = PLANTS.filter(p => {
+    const diffOk = state.filters.difficulty === 'all' || p.difficulty === state.filters.difficulty;
+    const lightOk = state.filters.light === 'all' || p.light === state.filters.light;
+    return diffOk && lightOk;
+  });
+
+  countLabel.textContent = `Showing ${filtered.length} of ${PLANTS.length} specimens`;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="col-span-full text-center py-16 text-forest-500">
+        <i data-lucide="search-x" class="w-8 h-8 mx-auto mb-3"></i>
+        No specimens match those filters yet.
+      </div>`;
+    refreshIcons();
+    return;
+  }
+
+  grid.innerHTML = filtered.map((plant, i) => `
+    <div class="plant-card reveal in-view group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col" style="transition-delay:${(i % 6) * 40}ms">
+      <div class="relative h-44 overflow-hidden bg-forest-50">
+        <img src="${plant.image}" alt="${plant.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
+        ${plant.id === state.topMatchId ? `<span class="absolute top-3 left-3 bg-forest-800 text-linen text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">Your Match</span>` : ''}
+        <span class="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${DIFFICULTY_STYLES[plant.difficulty]}">${plant.difficulty}</span>
+      </div>
+      <div class="p-5 flex-1 flex flex-col">
+        <div class="flex items-center gap-1">${rarityDots(plant.rarity)}<span class="ml-1 text-[11px] font-semibold text-forest-500 uppercase tracking-wide">${RARITY_LABEL[plant.rarity]}</span></div>
+        <h4 class="font-serif text-lg text-forest-900 mt-1.5">${plant.name}</h4>
+        <p class="italic text-forest-500 text-xs mt-0.5">${plant.latin}</p>
+        <div class="mt-3 flex items-center gap-2 text-xs text-forest-600">
+          <i data-lucide="${plant.light === 'direct' ? 'sun' : plant.light === 'low' ? 'moon' : 'cloud-sun'}" class="w-3.5 h-3.5"></i>
+          ${LIGHT_LABEL[plant.light]}
+        </div>
+        <div class="mt-4 flex items-center justify-between pt-4 border-t border-forest-900/8">
+          <span class="font-serif text-base text-forest-900">${plant.price}</span>
+          <button data-plant-id="${plant.id}" class="inspect-btn btn-press inline-flex items-center gap-1.5 text-sm font-semibold text-forest-700 hover:text-forest-900">
+            Inspect <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+    </div>`).join('');
+
+  refreshIcons();
+  grid.querySelectorAll('.inspect-btn').forEach(b => b.addEventListener('click', () => openModal(b.getAttribute('data-plant-id'))));
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+function openModal(plantId) {
+  const plant = PLANTS.find(p => p.id === plantId);
+  if (!plant) return;
+  state.activeModalId = plantId;
+
+  const reserved = state.reserved.has(plantId);
+
+  document.getElementById('modal-content').innerHTML = `
+    <div class="relative">
+      <button id="modal-close" class="btn-press absolute top-4 right-4 w-9 h-9 rounded-full bg-forest-900/5 hover:bg-forest-900/10 flex items-center justify-center text-forest-700 z-10">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <div class="h-52 sm:h-64 overflow-hidden rounded-t-3xl bg-forest-50">
+        <img src="${plant.image}" alt="${plant.name}" class="w-full h-full object-cover" loading="lazy">
+      </div>
+
+      <div class="p-7 sm:p-9">
+        <div class="flex items-center gap-1">${rarityDots(plant.rarity)}<span class="ml-1 text-[11px] font-semibold text-terracotta-600 uppercase tracking-wide">${RARITY_LABEL[plant.rarity]}</span></div>
+        <h3 class="font-serif text-2xl sm:text-3xl text-forest-900 mt-2">${plant.name}</h3>
+        <p class="italic text-forest-500 mt-0.5">${plant.latin}</p>
+        <p class="text-forest-600 mt-4 leading-relaxed text-sm">${plant.blurb}</p>
+
+        <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="bg-forest-50 rounded-2xl p-3.5 text-center">
+            <i data-lucide="droplets" class="w-4 h-4 mx-auto text-forest-600"></i>
+            <p class="text-[11px] font-semibold text-forest-500 uppercase tracking-wide mt-1.5">Water</p>
+            <p class="text-xs text-forest-800 mt-0.5 leading-snug">${plant.water}</p>
+          </div>
+          <div class="bg-forest-50 rounded-2xl p-3.5 text-center">
+            <i data-lucide="thermometer" class="w-4 h-4 mx-auto text-forest-600"></i>
+            <p class="text-[11px] font-semibold text-forest-500 uppercase tracking-wide mt-1.5">Humidity</p>
+            <p class="text-xs text-forest-800 mt-0.5 leading-snug">${plant.humidity}</p>
+          </div>
+          <div class="bg-forest-50 rounded-2xl p-3.5 text-center">
+            <i data-lucide="${plant.light === 'direct' ? 'sun' : plant.light === 'low' ? 'moon' : 'cloud-sun'}" class="w-4 h-4 mx-auto text-forest-600"></i>
+            <p class="text-[11px] font-semibold text-forest-500 uppercase tracking-wide mt-1.5">Light</p>
+            <p class="text-xs text-forest-800 mt-0.5 leading-snug">${LIGHT_LABEL[plant.light]}</p>
+          </div>
+          <div class="bg-forest-50 rounded-2xl p-3.5 text-center">
+            <i data-lucide="paw-print" class="w-4 h-4 mx-auto text-forest-600"></i>
+            <p class="text-[11px] font-semibold text-forest-500 uppercase tracking-wide mt-1.5">Pet Safety</p>
+            <p class="text-xs text-forest-800 mt-0.5 leading-snug">${plant.petSafe ? 'Pet safe' : 'Toxic if eaten'}</p>
+          </div>
+        </div>
+
+        <div class="mt-7 flex items-center justify-between gap-4">
+          <span class="font-serif text-2xl text-forest-900">${plant.price}</span>
+          <button id="reserve-btn" data-plant-id="${plant.id}" class="btn-press inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-full transition-colors ${reserved ? 'bg-forest-100 text-forest-600 cursor-default' : 'bg-terracotta-500 hover:bg-terracotta-400 text-linen'}">
+            <i data-lucide="${reserved ? 'check' : 'shopping-bag'}" class="w-4 h-4"></i>
+            ${reserved ? 'Reserved' : 'Reserve Specimen'}
+          </button>
+        </div>
+      </div>
+    </div>`;
+
+  refreshIcons();
+
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  const reserveBtn = document.getElementById('reserve-btn');
+  if (!reserved) reserveBtn.addEventListener('click', () => reserveSpecimen(plant));
+
+  const backdrop = document.getElementById('modal-backdrop');
+  const panel = document.getElementById('modal-panel');
+  backdrop.classList.remove('modal-backdrop-hidden');
+  backdrop.classList.add('modal-backdrop-shown');
+  requestAnimationFrame(() => {
+    panel.classList.remove('modal-panel-hidden');
+    panel.classList.add('modal-panel-shown');
+  });
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  const backdrop = document.getElementById('modal-backdrop');
+  const panel = document.getElementById('modal-panel');
+  panel.classList.remove('modal-panel-shown');
+  panel.classList.add('modal-panel-hidden');
+  backdrop.classList.remove('modal-backdrop-shown');
+  backdrop.classList.add('modal-backdrop-hidden');
+  document.body.style.overflow = '';
+  state.activeModalId = null;
+}
+
+function reserveSpecimen(plant) {
+  state.reserved.add(plant.id);
+  openModal(plant.id);
+  showToast(`${plant.name} reserved. Our greenhouse team will reach out within 24 hours to confirm care details and shipping.`);
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+let toastTimer = null;
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toast-message').textContent = message;
+  toast.classList.remove('toast-hidden');
+  toast.classList.add('toast-shown');
+  refreshIcons();
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('toast-shown');
+    toast.classList.add('toast-hidden');
+  }, 3400);
+}
+
+/* =========================================================
+   CHATBOT (rule-based, no backend)
+========================================================= */
+const CHAT_GREETING = "Hi, I'm the Rooted &amp; Rare assistant 🌿 Ask me what plants we sell, how to contact support, shipping, pet safety, or care tips.";
+
+const CHAT_QUICK_REPLIES = [
+  'What plants do you sell?',
+  'How do I contact support?',
+  'Do you ship?',
+  'Are your plants pet-safe?'
+];
+
+const CHAT_FAQ = [
+  {
+    keywords: ['sell', 'plants do you', 'catalog', 'inventory', 'products', 'what plants'],
+    reply: () => `We currently carry ${PLANTS.length} rare specimens — including ${PLANTS.slice(0, 5).map(p => p.name).join(', ')}, and more. Scroll down to "The full greenhouse" to filter by difficulty and light, or take our Plant Matchmaker quiz for a personal pick.`
+  },
+  {
+    keywords: ['contact', 'support', 'reach', 'human', 'email', 'phone', 'talk to someone'],
+    reply: () => 'You can reach our team at hello@rootedandrare.example or on Instagram @rootedandrare. (This is a demo site, so those inboxes are not monitored — in a real build, this is where a live handoff would happen.)'
+  },
+  {
+    keywords: ['ship', 'delivery', 'deliver'],
+    reply: () => 'We offer white-glove shipping on every order — plants are carefully packed to protect delicate variegation and root systems in transit.'
+  },
+  {
+    keywords: ['guarantee', 'return', 'refund', 'warranty', 'arrived dead', 'arrives dead'],
+    reply: () => "Every specimen ships with our health guarantee — if a plant arrives unwell, we'll replace it or issue a credit."
+  },
+  {
+    keywords: ['pet', 'cat', 'dog', 'toxic', 'safe for'],
+    reply: () => `Good question! Pet-safe picks in our current collection: ${PLANTS.filter(p => p.petSafe).map(p => p.name).join(', ')}. Click "Inspect" on any plant card to see its exact Pet Safety stat — always double-check before bringing a new plant home.`
+  },
+  {
+    keywords: ['price', 'cost', 'how much', 'expensive', 'cheap'],
+    reply: () => {
+      const prices = PLANTS.map(p => parseInt(p.price.replace('$', ''), 10));
+      return `Our specimens range from $${Math.min(...prices)} to $${Math.max(...prices)}, depending on rarity and size. Click "Inspect" on any plant in the greenhouse to see its exact price.`;
+    }
+  },
+  {
+    keywords: ['care', 'water', 'humidity', 'how do i take care', 'looking after'],
+    reply: () => 'Care needs vary by plant — check the Water, Humidity, and Light stats on any plant’s Inspect modal. Or take our 3-question Plant Matchmaker quiz and we’ll match you to something suited to your space and habits.'
+  },
+  {
+    keywords: ['quiz', 'match', 'recommend', 'which plant'],
+    reply: () => 'Our Plant Matchmaker quiz asks about your light, care habits, and style, then recommends a specimen from the greenhouse. Scroll up to "Find your perfect specimen" to give it a try.'
+  },
+  {
+    keywords: ['hour', 'location', 'where are you', 'visit', 'address', 'store'],
+    reply: () => "Rooted &amp; Rare is an online-only boutique nursery for this demo — no physical storefront to visit (yet!)."
+  },
+  {
+    keywords: ['rare', 'rarity', 'rarest'],
+    reply: () => {
+      const top = [...PLANTS].sort((a, b) => b.rarity - a.rarity)[0];
+      return `Our rarest specimen right now is the ${top.name} (${RARITY_LABEL[top.rarity]}). Every plant card shows rarity dots so you can compare at a glance.`;
+    }
+  },
+  {
+    keywords: ['hi', 'hello', 'hey', 'yo '],
+    reply: () => 'Hello! 🌿 Ask me about our plants, care, shipping, or how to contact support.'
+  },
+  {
+    keywords: ['thank', 'thanks', 'thx'],
+    reply: () => "You're welcome! Happy growing 🌱"
+  }
+];
+
+const CHAT_FALLBACK = "I'm a simple demo assistant, so I don't have an answer for that yet. Try asking what plants we sell, about shipping, pet safety, pricing, or how to contact support.";
+
+function getChatReply(userText) {
+  const text = userText.toLowerCase();
+  const match = CHAT_FAQ.find(entry => entry.keywords.some(k => text.includes(k)));
+  return match ? match.reply() : CHAT_FALLBACK;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function appendChatBubble(sender, html) {
+  const container = document.getElementById('chat-messages');
+  const bubble = document.createElement('div');
+  bubble.className = `chat-bubble flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+  bubble.style.opacity = '0';
+  bubble.style.transform = 'translateY(6px)';
+  bubble.innerHTML = `<div class="max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${sender === 'user' ? 'bg-forest-800 text-linen rounded-br-sm' : 'bg-white text-forest-800 border border-forest-900/10 rounded-bl-sm'}">${html}</div>`;
+  container.appendChild(bubble);
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      bubble.style.opacity = '1';
+      bubble.style.transform = 'translateY(0)';
+    });
+  });
+  container.scrollTop = container.scrollHeight;
+}
+
+function showTypingIndicator() {
+  const container = document.getElementById('chat-messages');
+  const bubble = document.createElement('div');
+  bubble.id = 'chat-typing';
+  bubble.className = 'flex justify-start';
+  bubble.innerHTML = `<div class="bg-white border border-forest-900/10 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm text-forest-400 italic">typing&hellip;</div>`;
+  container.appendChild(bubble);
+  container.scrollTop = container.scrollHeight;
+}
+
+function removeTypingIndicator() {
+  const el = document.getElementById('chat-typing');
+  if (el) el.remove();
+}
+
+function renderChatQuickReplies() {
+  const container = document.getElementById('chat-quick-replies');
+  container.innerHTML = CHAT_QUICK_REPLIES.map(q => `<button type="button" class="chat-quick-reply btn-press text-xs font-medium bg-forest-50 hover:bg-forest-100 text-forest-700 border border-forest-900/10 rounded-full px-3 py-1.5">${q}</button>`).join('');
+  container.querySelectorAll('.chat-quick-reply').forEach(btn => {
+    btn.addEventListener('click', () => sendChatMessage(btn.textContent));
+  });
+}
+
+function sendChatMessage(rawText) {
+  const trimmed = rawText.trim();
+  if (!trimmed) return;
+  appendChatBubble('user', escapeHtml(trimmed));
+  document.getElementById('chat-input').value = '';
+  showTypingIndicator();
+  setTimeout(() => {
+    removeTypingIndicator();
+    appendChatBubble('bot', getChatReply(trimmed));
+  }, 550 + Math.random() * 450);
+}
+
+function toggleChat(forceOpen) {
+  const open = forceOpen !== undefined ? forceOpen : !state.chatOpen;
+  state.chatOpen = open;
+  const win = document.getElementById('chat-window');
+  if (open) {
+    win.classList.remove('chat-window-hidden');
+    win.classList.add('chat-window-shown');
+    document.getElementById('chat-unread-dot').classList.add('hidden');
+    if (!state.chatGreeted) {
+      state.chatGreeted = true;
+      appendChatBubble('bot', CHAT_GREETING);
+      renderChatQuickReplies();
+    }
+    setTimeout(() => document.getElementById('chat-input').focus(), 260);
+  } else {
+    win.classList.remove('chat-window-shown');
+    win.classList.add('chat-window-hidden');
+  }
+}
+
+/* =========================================================
+   EVENTS: filters, modal backdrop, escape key
+========================================================= */
+document.getElementById('filter-difficulty').addEventListener('change', e => {
+  state.filters.difficulty = e.target.value;
+  renderGreenhouse();
+});
+document.getElementById('filter-light').addEventListener('change', e => {
+  state.filters.light = e.target.value;
+  renderGreenhouse();
+});
+document.getElementById('filter-reset').addEventListener('click', () => {
+  state.filters = { difficulty: 'all', light: 'all' };
+  document.getElementById('filter-difficulty').value = 'all';
+  document.getElementById('filter-light').value = 'all';
+  renderGreenhouse();
+});
+
+document.getElementById('modal-backdrop').addEventListener('click', e => {
+  if (e.target.id === 'modal-backdrop') closeModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && state.activeModalId) closeModal();
+  if (e.key === 'Escape' && state.chatOpen) toggleChat(false);
+});
+
+document.getElementById('chat-launcher').addEventListener('click', () => toggleChat());
+document.getElementById('chat-close').addEventListener('click', () => toggleChat(false));
+document.getElementById('chat-form').addEventListener('submit', e => {
+  e.preventDefault();
+  sendChatMessage(document.getElementById('chat-input').value);
+});
+
+/* =========================================================
+   SCROLL REVEAL
+========================================================= */
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in-view');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+function observeReveals() {
+  document.querySelectorAll('.reveal:not(.in-view)').forEach(el => revealObserver.observe(el));
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+function init() {
+  renderQuiz(false);
+  renderMatch();
+  renderGreenhouse();
+  observeReveals();
+  refreshIcons();
+  setTimeout(() => {
+    if (!state.chatOpen) document.getElementById('chat-unread-dot').classList.remove('hidden');
+  }, 4000);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
