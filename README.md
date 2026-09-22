@@ -1,5 +1,7 @@
 # Rooted & Rare 🌿
 
+**🌐 Live site: [bryan-ljx.github.io/Rooted-and-Rare-By-Claude](https://bryan-ljx.github.io/Rooted-and-Rare-By-Claude/)**
+
 A single-file, interactive proof-of-concept website for **Rooted & Rare**, a fictional upscale boutique nursery specializing in rare, ethically propagated tropical plants and terrariums.
 
 Built as a frontend-only demo — there is no backend, database, or real e-commerce behind it. Every interaction (the quiz, filtering, reservations, chat) runs entirely in the browser.
